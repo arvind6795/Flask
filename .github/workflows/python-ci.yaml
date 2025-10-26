@@ -35,7 +35,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    need: build
+    needs: build
     if: github.ref == 'refs/head/main'
     steps:
       - name: Trigger Render Deployment
