@@ -1,4 +1,4 @@
-name: Flask CI Pipeline
+name: Flask CI/CD Pipeline (Render)
 
 on:
   push:
@@ -17,7 +17,7 @@ jobs:
     
     # 2.Setup python environment
     - name: Set up Python
-      uses: actions/checkout@v5
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
     
@@ -32,3 +32,12 @@ jobs:
     - name: Run pytest
       run: |
         pytest -v
+  deploy:
+    runs-on: ubuntu-latest
+    need: build
+    if: github.ref == 'refs/head/main'
+    steps:
+      - name: Trigger Render Deployment
+        run: |
+          echo "Triggering Render deploy..."
+          curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
